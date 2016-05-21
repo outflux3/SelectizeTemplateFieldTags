@@ -6,7 +6,7 @@
  */
 
 /**
- * Class SelectizeTemplateTags
+ * Class SelectizeTemplateFieldTags
  */
 class SelectizeTemplateFieldTags extends WireData implements Module, ConfigurableModule {
 
