@@ -1,0 +1,152 @@
+<?php 
+
+/**
+ * SelectizeTemplateTags module for ProcessWire
+ *
+ */
+
+/**
+ * Class SelectizeTemplateTags
+ */
+class SelectizeTemplateFieldTags extends WireData implements Module, ConfigurableModule {
+
+
+    public static function getModuleInfo() {
+        return array(
+            'title' => 'Selectize Template &amp; Field Tags',
+            'author' => 'Macrura',
+            'version' => 001,
+            'summary' => 'Admin helper for enabling selectize tagging on templates.',
+            'href' => '',
+            'icon' => 'tags',
+            'singular' => true,
+            'autoload' => true,
+            'requires'  => array("JquerySelectize")
+        );
+    }
+
+    protected $allowedTags = array();
+    protected $jsConfig = array();
+
+    public function setAllowedTag($value, $text) {
+        $this->allowedTags[] = array('value' => $value, 'text' => $text);
+    }
+
+    /**
+     * __construct() is the right place to init config vars before they'll get populated
+     *
+     */
+    public function __construct() {
+        $this->configData = $this->modules->getModuleConfigData($this);
+    }
+
+    public function init() {
+    }
+
+    public function getModuleConfigInputfields(array $data) {
+
+        $modules = $this->wire('modules');
+
+        $fields = new InputfieldWrapper();
+
+        // list of allowed tags
+        $field = $this->modules->get('InputfieldTextarea');
+        $field->attr('name', 'userTagsList');
+        $field->label = $this->_('Allowed tags for templates.');
+        $description  = $this->_('List each tag, 1 per line, comma separated with the label to use for the tag');
+        $field->description = $description;
+        $notes  = 'Example: projects, Projects etc; Note: If you do not define tags here make sure to check below to allow tag creation!';
+        $field->notes = $notes;
+        $field->value = trim($this->userTagsList);
+        $fields->add($field);
+
+        // Allow create ad-hoc tags
+        $field = $modules->get('InputfieldCheckbox');
+        $field->name = 'allowTagCreate';
+        $field->label = __('Allow tag creation?', __FILE__);
+        $field->description = $this->_('By default tags are limited to the items listed above. Check this to allow any tags to be input.');
+        $field->notes = "If this is unchecked AND there are already tags on templates AND those tags are not in your permitted list, they will end up being deleted when users save the page.";
+        $field->value = (isset($data['allowTagCreate'])) ? $data['allowTagCreate'] : 0;
+        $field->checked = ($field->value == 1) ? 'checked' : '';
+        $field->columnWidth = 33;
+        $fields->add($field); 
+
+
+        $field = $modules->get('InputfieldCheckbox');
+        $field->name = 'enhanceIconSelect';
+        $field->label = __('Enable Selectize on icon select?', __FILE__);
+        $field->description = $this->_('This enhances the icon select box to use Selectize.js.');
+        $field->value = (isset($data['enhanceIconSelect'])) ? $data['enhanceIconSelect'] : 0;
+        $field->checked = ($field->value == 1) ? 'checked' : '';
+        $field->columnWidth = 33;
+        $fields->add($field); 
+
+        // Plugins to load
+        $field = $modules->get('InputfieldCheckboxes');
+        $field->name = 'plugins';
+        $field->label = __('Plugins', __FILE__);
+        $field->addOption('remove_button', __('Remove Button'));
+        $field->addOption('drag_drop', __('Drag and Drop'));
+        $field->addOption('restore_on_backspace', __('Restore on Backspace'));
+        $field->value = isset($data['plugins']) ? $data['plugins'] : '';
+        $field->columnWidth = 33;
+        $fields->add($field); 
+
+        return $fields;
+    }
+
+
+    public function ready() {
+
+        $proc = $this->wire('page')->process;
+        $allowedProcesses = array('ProcessTemplate', 'ProcessField');
+        if(!in_array($proc, $allowedProcesses)) return false;
+        if($this->wire('page')->template->name != 'admin') return false;
+
+        $this->addHookBefore('ProcessTemplate::executeEdit', $this, 'addAssets');
+        $this->addHookBefore('ProcessField::executeEdit', $this, 'addAssets');
+
+        return false;
+    }
+
+
+    public function addAssets(HookEvent $event) {
+
+        $this->config->scripts->add($this->config->urls->siteModules . __CLASS__ . '/' . __CLASS__ . '.js?v=' . time());
+
+        $configData = $this->configData;
+
+        if(isset($configData['userTagsList']) && $configData['userTagsList'] !== '') {
+            $userTagsLines = explode(PHP_EOL, $configData['userTagsList']);
+            foreach($userTagsLines as $row) {
+                $parts = explode(',', $row);
+                $tagVal = trim($parts[0]);
+                $tagTxt = trim($parts[1]) ? trim($parts[1]) : trim($parts[0]);
+                $this->setAllowedTag($tagVal, $tagTxt);
+            }
+            $this->jsConfig['tags'] = $this->allowedTags;
+        } else {
+            $this->jsConfig['tags'] = [];
+        }
+
+        if(isset($configData['plugins'])) {
+            $this->jsConfig['plugins'] = $configData['plugins'];
+        }
+
+        if (isset($configData['allowTagCreate']) && $configData['allowTagCreate'] == 1) {
+            $this->jsConfig['create'] = true;
+        }
+
+        if (isset($configData['enhanceIconSelect']) && $configData['enhanceIconSelect'] == 1) {
+            $this->jsConfig['enhance'] = true;
+            //$this->config->js(__CLASS__ . 'Settings', array('enhance' => true));
+        }
+
+        $this->modules->JquerySelectize;
+
+        $this->config->js(__CLASS__, $this->jsConfig);
+        return false;
+    }
+
+
+}
