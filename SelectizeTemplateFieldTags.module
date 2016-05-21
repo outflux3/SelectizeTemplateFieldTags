@@ -52,7 +52,7 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         // list of allowed tags
         $field = $this->modules->get('InputfieldTextarea');
         $field->attr('name', 'userTagsList');
-        $field->label = $this->_('Allowed tags for templates.');
+        $field->label = $this->_('Allowed tags for templates & fields.');
         $description  = $this->_('List each tag, 1 per line, comma separated with the label to use for the tag');
         $field->description = $description;
         $notes  = 'Example: projects, Projects etc; Note: If you do not define tags here make sure to check below to allow tag creation!';
@@ -69,17 +69,18 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         $field->value = (isset($data['allowTagCreate'])) ? $data['allowTagCreate'] : 0;
         $field->checked = ($field->value == 1) ? 'checked' : '';
         $field->columnWidth = 33;
-        $fields->add($field); 
+        $fields->add($field);
 
 
         $field = $modules->get('InputfieldCheckbox');
         $field->name = 'enhanceIconSelect';
         $field->label = __('Enable Selectize on icon select?', __FILE__);
         $field->description = $this->_('This enhances the icon select box to use Selectize.js.');
+        $field->notes = "Note: this will disable the current ability to show all the icons as selectize.js removes the options."
         $field->value = (isset($data['enhanceIconSelect'])) ? $data['enhanceIconSelect'] : 0;
         $field->checked = ($field->value == 1) ? 'checked' : '';
         $field->columnWidth = 33;
-        $fields->add($field); 
+        $fields->add($field);
 
         // Plugins to load
         $field = $modules->get('InputfieldCheckboxes');
@@ -90,7 +91,7 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         $field->addOption('restore_on_backspace', __('Restore on Backspace'));
         $field->value = isset($data['plugins']) ? $data['plugins'] : '';
         $field->columnWidth = 33;
-        $fields->add($field); 
+        $fields->add($field);
 
         return $fields;
     }
