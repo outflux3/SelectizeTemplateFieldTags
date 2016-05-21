@@ -76,7 +76,7 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         $field->name = 'enhanceIconSelect';
         $field->label = __('Enable Selectize on icon select?', __FILE__);
         $field->description = $this->_('This enhances the icon select box to use Selectize.js.');
-        $field->notes = "Note: this will disable the current ability to show all the icons as selectize.js removes the options."
+        $field->notes = "Note: this will disable the current ability to show all the icons as selectize.js removes the options.";
         $field->value = (isset($data['enhanceIconSelect'])) ? $data['enhanceIconSelect'] : 0;
         $field->checked = ($field->value == 1) ? 'checked' : '';
         $field->columnWidth = 33;
