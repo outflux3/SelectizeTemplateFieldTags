@@ -36,7 +36,6 @@ $(document).ready(function () {
 	});
 
 
-
     if(config.SelectizeTemplateFieldTags.enhance == true) {
 
         $('#Inputfield_icon, #Inputfield_pageLabelIcon').selectize({
