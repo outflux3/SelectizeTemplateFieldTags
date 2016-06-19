@@ -15,7 +15,7 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         return array(
             'title' => 'Selectize Template &amp; Field Tags',
             'author' => 'Macrura',
-            'version' => 001,
+            'version' => 002,
             'summary' => 'Admin helper for enabling selectize tagging on templates.',
             'href' => '',
             'icon' => 'tags',
@@ -122,7 +122,7 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
             foreach($userTagsLines as $row) {
                 $parts = explode(',', $row);
                 $tagVal = trim($parts[0]);
-                $tagTxt = trim($parts[1]) ? trim($parts[1]) : trim($parts[0]);
+                $tagTxt = $parts[1] ? trim($parts[1]) : trim($parts[0]);
                 $this->setAllowedTag($tagVal, $tagTxt);
             }
             $this->jsConfig['tags'] = $this->allowedTags;
