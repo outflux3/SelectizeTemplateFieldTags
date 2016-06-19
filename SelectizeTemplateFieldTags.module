@@ -122,7 +122,7 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
             foreach($userTagsLines as $row) {
                 $parts = explode(',', $row);
                 $tagVal = trim($parts[0]);
-                $tagTxt = $parts[1] ? trim($parts[1]) : trim($parts[0]);
+                $tagTxt = isset($parts[1]) ? trim($parts[1]) : trim($parts[0]);
                 $this->setAllowedTag($tagVal, $tagTxt);
             }
             $this->jsConfig['tags'] = $this->allowedTags;
