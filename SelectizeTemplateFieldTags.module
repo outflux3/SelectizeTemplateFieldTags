@@ -13,9 +13,9 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
 
     public static function getModuleInfo() {
         return array(
-            'title' => 'Selectize Template &amp; Field Tags',
+            'title' => 'Selectize Template & Field Tags',
             'author' => 'Macrura',
-            'version' => 002,
+            'version' => 003,
             'summary' => 'Admin helper for enabling selectize tagging on templates.',
             'href' => '',
             'icon' => 'tags',
