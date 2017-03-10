@@ -41,7 +41,7 @@ $(document).ready(function () {
         $('#Inputfield_icon, #Inputfield_pageLabelIcon').selectize({
             render: {
                 item: function(item, escape) {
-                    console.log(item);
+                    //console.log(item);
                     return '<div>' +
                         '<i class="fa ' + escape(item.value) + '"></i>' +
                         ' <span class="desc">' + escape(item.text) + '</span>'  +
