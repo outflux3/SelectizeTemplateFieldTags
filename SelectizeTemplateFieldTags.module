@@ -10,21 +10,6 @@
  */
 class SelectizeTemplateFieldTags extends WireData implements Module, ConfigurableModule {
 
-
-    public static function getModuleInfo() {
-        return array(
-            'title' => 'Selectize Template & Field Tags',
-            'author' => 'Macrura',
-            'version' => 003,
-            'summary' => 'Admin helper for enabling selectize tagging on templates.',
-            'href' => '',
-            'icon' => 'tags',
-            'singular' => true,
-            'autoload' => true,
-            'requires'  => array("JquerySelectize")
-        );
-    }
-
     protected $allowedTags = array();
     protected $jsConfig = array();
 
