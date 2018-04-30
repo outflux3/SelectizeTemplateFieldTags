@@ -99,8 +99,8 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
 
     public function addAssets(HookEvent $event) {
 
-
         $this->config->scripts->add($this->config->urls->siteModules . __CLASS__ . '/' . __CLASS__ . '.js?v=' . time());
+       // $this->config->styles->add($this->config->urls->siteModules . __CLASS__ . '/' . __CLASS__ . '.css?v=' . time());
 
         $configData = $this->configData;
 
@@ -127,12 +127,9 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
 
         if (isset($configData['enhanceIconSelect']) && $configData['enhanceIconSelect'] == 1) {
             $this->jsConfig['enhance'] = true;
-            //$this->config->js(__CLASS__ . 'Settings', array('enhance' => true));
         }
 
-        //$this->modules->JquerySelectize;
-
-        if($this->config->version < '3.0.67') {
+        if(version_compare($this->wire('config')->version, '3.0.67', '<')) {
             $this->modules->JquerySelectize;
         } else {
             // if the version is >= than 3.0.67, and jQuerySelectize module is installed,

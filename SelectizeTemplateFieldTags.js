@@ -25,8 +25,9 @@ $(document).ready(function () {
                 tags.push ({ "value": ttag, "text": ttag});
             });
         }
-
     }
+
+    $('.AdminThemeUikit #Inputfield_tags').removeClass('uk-input');
 
 	$('#Inputfield_tags').selectize({
 		delimiter: ' ',
@@ -37,6 +38,9 @@ $(document).ready(function () {
 
 
     if(config.SelectizeTemplateFieldTags.enhance == true) {
+
+        $('.AdminThemeUikit #Inputfield_icon').removeClass('uk-select');
+        $('.AdminThemeUikit #Inputfield_pageLabelIcon').removeClass('uk-select');
 
         $('#Inputfield_icon, #Inputfield_pageLabelIcon').selectize({
             render: {
