@@ -100,10 +100,29 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
     public function addAssets(HookEvent $event) {
 
         $this->config->scripts->add($this->config->urls->siteModules . __CLASS__ . '/' . __CLASS__ . '.js?v=' . time());
-       // $this->config->styles->add($this->config->urls->siteModules . __CLASS__ . '/' . __CLASS__ . '.css?v=' . time());
 
         $configData = $this->configData;
 
+        // Tags In Use
+        $usedTags = [];
+        foreach($this->wire('templates') as $t) {
+            if($t->tags) {
+                $tags = explode(' ',$t->tags);
+                $usedTags = array_merge($tags,$usedTags);
+            }
+        }
+        foreach($this->wire('fields') as $f) {
+            if($f->tags) {
+                $tags = explode(' ',$f->tags);
+                $usedTags = array_merge($tags,$usedTags);
+            }
+        }
+        $usedTags = array_values(array_unique($usedTags));
+        foreach($usedTags as $usedTag) {
+            $this->setAllowedTag(strtolower($usedTag), $usedTag);
+        }
+
+        // User Defined Tags
         if(isset($configData['userTagsList']) && $configData['userTagsList'] !== '') {
             $userTagsLines = explode(PHP_EOL, $configData['userTagsList']);
             foreach($userTagsLines as $row) {
@@ -112,11 +131,14 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
                 $tagTxt = isset($parts[1]) ? trim($parts[1]) : trim($parts[0]);
                 $this->setAllowedTag($tagVal, $tagTxt);
             }
+        } 
+
+        if($this->allowedTags) {
             $this->jsConfig['tags'] = $this->allowedTags;
         } else {
-            $this->jsConfig['tags'] = [];
+            $this->jsConfig['tags'] = ["no_tags" => "No Tags"];
         }
-
+        
         if(isset($configData['plugins'])) {
             $this->jsConfig['plugins'] = $configData['plugins'];
         }
