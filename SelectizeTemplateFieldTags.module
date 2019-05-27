@@ -119,7 +119,7 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         }
         $usedTags = array_values(array_unique($usedTags));
         foreach($usedTags as $usedTag) {
-            $this->setAllowedTag(strtolower($usedTag), $usedTag);
+            $this->setAllowedTag($usedTag, $usedTag);
         }
 
         // User Defined Tags
@@ -134,9 +134,21 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         } 
 
         if($this->allowedTags) {
-            $this->jsConfig['tags'] = $this->allowedTags;
+            $tags = [];
+            foreach($this->allowedTags as $tag) {
+                if( substr($tag['value'],0,1) == '-') continue;
+                $tags[$tag['value']] = $tag['text'];
+            }
+            ksort($tags);
+            $tagsArray = [];
+            foreach($tags as $value => $text) {
+                $tagsArray[] = ["value" => $value,"text" => $text];
+            }
+            $this->jsConfig['tags'] = $tagsArray;
         } else {
-            $this->jsConfig['tags'] = ["no_tags" => "No Tags"];
+            $this->jsConfig['tags'] = [
+                ["value" => "No Tags", "label" => "No Tags"],
+            ];
         }
         
         if(isset($configData['plugins'])) {
