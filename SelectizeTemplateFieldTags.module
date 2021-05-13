@@ -163,6 +163,12 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
             $this->jsConfig['enhance'] = true;
         }
 
+        // Prevent Init for newer versions that have built in tagging
+        if(version_compare($this->wire('config')->version, '3.0.176', '>=')) {
+            $this->jsConfig['init'] = false;
+        }
+
+
         if(version_compare($this->wire('config')->version, '3.0.67', '<')) {
             $this->modules->JquerySelectize;
         } else {

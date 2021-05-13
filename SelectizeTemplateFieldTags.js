@@ -13,6 +13,7 @@ $(document).ready(function () {
 
 	var tags 	= config.SelectizeTemplateFieldTags.tags;
 	var create 	= config.SelectizeTemplateFieldTags.create;
+    var init    = config.SelectizeTemplateFieldTags.init;
 
     if(create == true) {
         tagsInput = $("#Inputfield_tags");
@@ -29,12 +30,15 @@ $(document).ready(function () {
 
     $('.AdminThemeUikit #Inputfield_tags').removeClass('uk-input');
 
-	$('#Inputfield_tags').selectize({
-		delimiter: ' ',
-		options: tags,
-		plugins: config.SelectizeTemplateFieldTags.plugins,
-		create: config.SelectizeTemplateFieldTags.create,
-	});
+
+    if(init == true) {
+    	$('#Inputfield_tags').selectize({
+    		delimiter: ' ',
+    		options: tags,
+    		plugins: config.SelectizeTemplateFieldTags.plugins,
+    		create: config.SelectizeTemplateFieldTags.create,
+    	});
+    } 
 
 
     if(config.SelectizeTemplateFieldTags.enhance == true) {
