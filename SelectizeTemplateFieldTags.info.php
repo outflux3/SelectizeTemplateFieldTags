@@ -3,7 +3,7 @@
 $info = array(
     'title'     => 'Selectize Template & Field Tags',
     'author'    => 'Macrura',
-    'version'   => '009',
+    'version'   => '010',
     'summary'   => 'Admin helper for enabling selectize tagging on templates.',
     'href'      => '',
     'icon'      => 'tags',

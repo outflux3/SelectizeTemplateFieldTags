@@ -166,6 +166,8 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         // Prevent Init for newer versions that have built in tagging
         if(version_compare($this->wire('config')->version, '3.0.176', '>=')) {
             $this->jsConfig['init'] = false;
+        } else {
+            $this->jsConfig['init'] = true;
         }
 
 
