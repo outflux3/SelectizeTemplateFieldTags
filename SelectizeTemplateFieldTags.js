@@ -28,18 +28,19 @@ $(document).ready(function () {
         }
     }
 
-    $('.AdminThemeUikit #Inputfield_tags').removeClass('uk-input');
 
-
+    // init will only be true for core versions prior to 3.0.176
     if(init == true) {
-    	$('#Inputfield_tags').selectize({
+        
+        $('.AdminThemeUikit #Inputfield_tags').removeClass('uk-input');
+        
+        $('#Inputfield_tags').selectize({
     		delimiter: ' ',
     		options: tags,
     		plugins: config.SelectizeTemplateFieldTags.plugins,
     		create: config.SelectizeTemplateFieldTags.create,
     	});
     } 
-
 
     if(config.SelectizeTemplateFieldTags.enhance == true) {
 

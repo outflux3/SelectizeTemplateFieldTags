@@ -26,7 +26,12 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
     }
 
     public function init() {
-
+       
+        // only after 3.0.179, but no version bump yet
+        if(version_compare($this->wire('config')->version, '3.0.178', '>=')) {
+    	    $this->addHookAfter('Templates::getTags', $this, 'addUserTags');
+            $this->addHookAfter('Fields::getTags', $this, 'addUserTags');
+        }
     }
 
     public function getModuleConfigInputfields(array $data) {
@@ -94,6 +99,32 @@ class SelectizeTemplateFieldTags extends WireData implements Module, Configurabl
         $this->addHookBefore('ProcessField::executeEdit', $this, 'addAssets');
 
         return false;
+    }
+
+
+    // only after 3.0.179 - add module defined tags to the new tags field.
+    public function addUserTags(HookEvent $event) {
+
+    	$tagsArray = $event->return;
+
+    	$configData = $this->configData;
+        // User Defined Tags
+        if(isset($configData['userTagsList']) && $configData['userTagsList'] !== '') {
+            $userTags = [];
+            $userTagsLines = explode(PHP_EOL, $configData['userTagsList']);
+            foreach($userTagsLines as $row) {
+                $parts = explode(',', $row);
+                $tagVal = trim($parts[0]);
+                $tagTxt = isset($parts[1]) ? trim($parts[1]) : trim($parts[0]);
+                $userTags[$tagVal] = $tagTxt;
+            }
+
+            $tagsArray = array_merge($tagsArray,$userTags);
+            ksort($tagsArray);
+            $event->return = $tagsArray;
+
+        } 
+
     }
 
 
